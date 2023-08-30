@@ -85,8 +85,7 @@ namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Category
 
         [Theory(DisplayName = nameof(InstantiateErrorWhenNameIsLessThan3Characters))]
         [Trait("Domain", "Category - Aggregates")]
-        [InlineData("a")]
-        [InlineData("ab")]
+        [MemberData(nameof(GetNamesWithLessThan3Characters), parameters: 6)]
         public void InstantiateErrorWhenNameIsLessThan3Characters(string invalidName)
         {
             // Arrange
@@ -97,6 +96,17 @@ namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Category
             // Act & Assert
             action.Should().Throw<EntityValidationException>()
                            .WithMessage("Name should be at least 3 characters long");
+        }
+
+        public static IEnumerable<object[]> GetNamesWithLessThan3Characters(int numberOfInteractions)
+        {
+            var fixture = new CategoryTestFixture();
+
+            for (int i = 0; i < numberOfInteractions; i++)
+            {
+                var isOdd = i % 2 == 1;
+                yield return new object[] { fixture.GetValidCategoryName().Substring(0, isOdd ? 1 : 2) };
+            }
         }
 
         [Fact(DisplayName = nameof(InstantiateErrorWhenNameIsGreaterThan255Characters))]
@@ -171,15 +181,14 @@ namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Category
             // Arrange
             var category = _categoryTestFixture.GetValidCategory();
 
-            var newValues = new { Name = "new name", Description = "new description" };
+            var categoryWithNewValues = _categoryTestFixture.GetValidCategory();
 
             // Act
-            category.Update(newValues.Name, newValues.Description);
+            category.Update(categoryWithNewValues.Name, categoryWithNewValues.Description);
 
             // Assert
-            category.Name.Should().Be(newValues.Name);
-            category.Description.Should().Be(newValues.Description);
-
+            category.Name.Should().Be(categoryWithNewValues.Name);
+            category.Description.Should().Be(categoryWithNewValues.Description);
         }
 
         [Fact(DisplayName = nameof(UpdateOnlyName))]
@@ -189,14 +198,14 @@ namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Category
             // Arrange
             var category = _categoryTestFixture.GetValidCategory();
 
-            var newValues = new { Name = "new name" };
+            var newName = _categoryTestFixture.GetValidCategoryName();
             var currentDescription = category.Description;
 
             // Act
-            category.Update(newValues.Name);
+            category.Update(newName);
 
             // Assert
-            Assert.Equal(newValues.Name, category.Name);
+            Assert.Equal(newName, category.Name);
             Assert.Equal(currentDescription, category.Description);
         }
     }
