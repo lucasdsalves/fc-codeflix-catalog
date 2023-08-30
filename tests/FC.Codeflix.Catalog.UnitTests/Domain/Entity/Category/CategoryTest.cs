@@ -64,7 +64,7 @@ namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Category
 
             // Act & Assert
             action.Should().Throw<EntityValidationException>()
-                           .WithMessage("Name should not be empty or null");
+                           .WithMessage("Name should not be null or empty");
         }
 
         [Fact(DisplayName = nameof(InstantiateErrorWhenDescriptionIsEmpty))]
@@ -80,7 +80,7 @@ namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Category
             var exception = Assert.Throws<EntityValidationException>(action);
 
             // Assert
-            Assert.Equal("Description should not be empty or null", exception.Message);
+            Assert.Equal("Description should not be null or empty", exception.Message);
         }
 
         [Theory(DisplayName = nameof(InstantiateErrorWhenNameIsLessThan3Characters))]
@@ -95,7 +95,7 @@ namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Category
 
             // Act & Assert
             action.Should().Throw<EntityValidationException>()
-                           .WithMessage("Name should be at least 3 characters long");
+                           .WithMessage("Name should not be less than 3 characters long");
         }
 
         public static IEnumerable<object[]> GetNamesWithLessThan3Characters(int numberOfInteractions)
@@ -124,7 +124,7 @@ namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Category
             var exception = Assert.Throws<EntityValidationException>(action);
 
             // Assert
-            Assert.Equal("Name should be less or equal to 255 characters long", exception.Message);
+            Assert.Equal("Name should not be greater than 255 characters long", exception.Message);
         }
 
 
@@ -141,7 +141,7 @@ namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Category
 
             // Act & Assert
             action.Should().Throw<EntityValidationException>()
-                           .WithMessage("Description should be less or equal to 10000 characters long");
+                           .WithMessage("Description should not be greater than 10000 characters long");
         }
 
         [Fact(DisplayName = nameof(Activate))]
