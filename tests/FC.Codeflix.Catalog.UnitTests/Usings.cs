@@ -1,6 +1,10 @@
 global using Xunit;
 global using FluentAssertions;
 global using Bogus;
+global using Moq;
 global using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 global using FC.Codeflix.Catalog.Domain.Validation;
 global using FC.Codeflix.Catalog.Domain.Exceptions;
+global using FC.Codeflix.Catalog.Application.Interfaces;
+global using FC.Codeflix.Catalog.Domain.Entity;
+global using FC.Codeflix.Catalog.Domain.Repository;
