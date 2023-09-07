@@ -1,4 +1,5 @@
 ﻿using FC.Codeflix.Catalog.Application.Interfaces;
+using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
 using FC.Codeflix.Catalog.Domain.Repository;
 using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 
@@ -15,7 +16,7 @@ namespace FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<CreateCategoryOutput> Handle(CreateCategoryInput input, CancellationToken cancellationToken)
+        public async Task<CategoryModelOutput> Handle(CreateCategoryInput input, CancellationToken cancellationToken)
         {
             var category = new DomainEntity.Category(
                 input.Name,
@@ -27,7 +28,7 @@ namespace FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory
 
             await _unitOfWork.Commit(cancellationToken);
 
-            return CreateCategoryOutput.FromCategory(category);
+            return CategoryModelOutput.FromCategory(category);
         }
     }
 }

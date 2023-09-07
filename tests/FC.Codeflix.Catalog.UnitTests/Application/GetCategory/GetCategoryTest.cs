@@ -1,4 +1,5 @@
 ﻿using GetCategoryUseCase = FC.Codeflix.Catalog.Application.UseCases.Category.GetCategory;
+using FC.Codeflix.Catalog.Application.Exceptions;
 
 namespace FC.Codeflix.Catalog.UnitTests.Application.GetCategory
 {
@@ -45,6 +46,27 @@ namespace FC.Codeflix.Catalog.UnitTests.Application.GetCategory
             output.Name.Should().Be(sampleCategory.Name);
             output.Description.Should().Be(sampleCategory.Description);
             output.IsActive.Should().Be(sampleCategory.IsActive);
+        }
+
+        [Fact(DisplayName = nameof(ThrowsNotFoundExceptionWhenCategoryDoesntExsists))]
+        [Trait("Application", "GetCategory - Use Cases")]
+        public async Task ThrowsNotFoundExceptionWhenCategoryDoesntExsists()
+        {
+            var sampleGuid = Guid.NewGuid();
+
+            _repositoryMock.Setup(x => x.Get(
+                            It.IsAny<Guid>(),
+                            It.IsAny<CancellationToken>()
+               )).ThrowsAsync(new NotFoundException($"Category '{sampleGuid}' not found "));
+
+            var input = new GetCategoryUseCase.GetCategoryInput(sampleGuid);
+
+            var useCase = new GetCategoryUseCase.GetCategory(_repositoryMock.Object);
+
+            var task = async () 
+                => await useCase.Handle(input, CancellationToken.None);
+
+            await task.Should().ThrowAsync<NotFoundException>();
         }
     }
 }
