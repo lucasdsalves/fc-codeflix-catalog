@@ -15,6 +15,11 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
                GetRandomBoolean()
                );
 
+        public List<Category> GetSampleCategoriesList(int length = 5)
+        => Enumerable.Range(1, length )
+                     .Select(_ => GetSampleCategory())
+                     .ToList();
+
         public string GetValidCategoryName()
         {
             var categoryName = "";
