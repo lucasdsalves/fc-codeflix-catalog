@@ -48,13 +48,18 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
             return new Random().NextDouble() < 0.5;
         }
 
-        public CodeflixCatalogDbContext CreateDbContext()
+        public CodeflixCatalogDbContext CreateDbContext(bool preserveData = false)
         {
-            return new CodeflixCatalogDbContext(
+            var context = new CodeflixCatalogDbContext(
                                 new DbContextOptionsBuilder<CodeflixCatalogDbContext>()
                                     .UseInMemoryDatabase("integration-tests-db")
                                     .Options
                                 );
+
+            if (preserveData == false)
+                context.Database.EnsureDeleted();
+
+            return context;
         }
     }
 }

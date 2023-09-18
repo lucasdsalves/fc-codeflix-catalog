@@ -23,12 +23,13 @@ namespace FC.Codeflix.Catalog.Infra.Data.EF.Repositories
 
         public Task Delete(Category aggregate, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(_categories.Remove(aggregate));
         }
 
         public async Task<Category> Get(Guid id, CancellationToken cancellationToken)
         {
-            var category = await _categories.FindAsync(id, cancellationToken);
+            var category = await _categories.AsNoTracking()
+                                            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
 
             if (category is null)
                 throw new NotFoundException($"Category '{id}' not found");
@@ -36,9 +37,12 @@ namespace FC.Codeflix.Catalog.Infra.Data.EF.Repositories
             return category;
         }
 
-        public Task<OutputSearch<Category>> Search(SearchInput input, CancellationToken cancellationToken)
+        public async Task<OutputSearch<Category>> Search(SearchInput input, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var total = await _categories.CountAsync();
+            var items = await _categories.ToListAsync();
+
+            return new OutputSearch<Category>(input.Page, input.PerPage, total, items);
         }
 
         public Task<Category> Update(Category aggregate, CancellationToken cancellationToken)
