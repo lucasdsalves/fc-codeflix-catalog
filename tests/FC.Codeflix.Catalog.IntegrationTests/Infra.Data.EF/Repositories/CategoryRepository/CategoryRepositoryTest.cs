@@ -187,5 +187,75 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
             output.PerPage.Should().Be(searchInput.PerPage);
             output.Total.Should().Be(sampleCategoryList.Count);
         }
+
+        [Theory(DisplayName = nameof(SearchReturnsPaginated))]
+        [Trait("Integration/Infra.Data", "CategoryRepository - Repositories")]
+        [InlineData(10, 1, 5, 5)]
+        [InlineData(7, 2, 5, 2)]
+        public async Task SearchReturnsPaginated(int quantityCategoriesToGenerate, int page, int perPage, int expectedQuantityItens)
+        {
+            // Arrange
+            CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
+
+            var sampleCategoryList = _fixture.GetSampleCategoriesList(quantityCategoriesToGenerate);
+
+            await dbContext.AddRangeAsync(sampleCategoryList);
+            await dbContext.SaveChangesAsync(CancellationToken.None);
+
+            var categoryRepository = new Repository.CategoryRepository(dbContext);
+
+            var searchInput = new SearchInput(page, perPage, "", "", SearchOrder.Asc);
+
+            // Act
+            var output = await categoryRepository.Search(searchInput, CancellationToken.None);
+
+            // Assert
+            output.Should().NotBeNull();
+            output.Items.Should().NotBeNull();
+            output.Items.Should().HaveCount(expectedQuantityItens);
+            output.CurrentPage.Should().Be(searchInput.Page);
+            output.PerPage.Should().Be(searchInput.PerPage);
+            output.Total.Should().Be(quantityCategoriesToGenerate);
+        }
+
+        [Theory(DisplayName = nameof(SearchByText))]
+        [Trait("Integration/Infra.Data", "CategoryRepository - Repositories")]
+        [InlineData("Action", 1, 5, 1, 1)]
+        [InlineData("Horror", 1, 5, 3, 3)]
+        [InlineData("Drama", 2, 5, 0, 1)]
+        public async Task SearchByText(string search, int page, int perPage, int expectedQuantityItensReturned, int expectedQuantityTotalItens)
+        {
+            // Arrange
+            CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
+
+            var sampleCategoryList = _fixture.GetSampleCategoriesListhWithNames(new List<string>()
+            {
+                "Action",
+                "Horror",
+                "Horror - Robots",
+                "Horror - Based On Real Facts",
+                "Drama",
+                "Sci-fi",
+                "Comedy"
+            });
+
+            await dbContext.AddRangeAsync(sampleCategoryList);
+            await dbContext.SaveChangesAsync(CancellationToken.None);
+
+            var categoryRepository = new Repository.CategoryRepository(dbContext);
+
+            var searchInput = new SearchInput(page, perPage, search, "", SearchOrder.Asc);
+
+            // Act
+            var output = await categoryRepository.Search(searchInput, CancellationToken.None);
+
+            // Assert
+            output.Should().NotBeNull();
+            output.Items.Should().NotBeNull();
+            output.Items.Should().HaveCount(expectedQuantityItensReturned);
+            output.CurrentPage.Should().Be(searchInput.Page);
+            output.PerPage.Should().Be(searchInput.PerPage);
+            output.Total.Should().Be(expectedQuantityTotalItens);
+        }
     }
 }

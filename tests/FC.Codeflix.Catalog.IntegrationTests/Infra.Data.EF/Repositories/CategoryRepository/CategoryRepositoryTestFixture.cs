@@ -20,6 +20,14 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
                      .Select(_ => GetSampleCategory())
                      .ToList();
 
+        public List<Category> GetSampleCategoriesListhWithNames(List<string> names)
+            => names.Select(name =>
+            {
+                var category = GetSampleCategory();
+                category.Update(name);
+                return category;
+            }).ToList();
+
         public string GetValidCategoryName()
         {
             var categoryName = "";
