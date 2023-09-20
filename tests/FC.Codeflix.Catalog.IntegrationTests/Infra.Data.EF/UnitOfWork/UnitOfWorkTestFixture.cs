@@ -1,22 +1,22 @@
 ﻿using FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.IntegrationTests.Base;
 
-namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.CategoryRepository
+namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.UnitOfWork
 {
-    [CollectionDefinition(nameof(CategoryRepositoryTestFixture))]
-    public class CategoryRepositoryTestFixtureCollection : ICollectionFixture<CategoryRepositoryTestFixture> { }
+    [CollectionDefinition(nameof(UnitOfWorkTestFixture))]
+    public class UnitOfWorkTestFixtureCollection : ICollectionFixture<UnitOfWorkTestFixture> { }
 
-    public class CategoryRepositoryTestFixture : BaseFixture
+    public class UnitOfWorkTestFixture : BaseFixture
     {
         public Category GetSampleCategory()
-           => new(
-               GetValidCategoryName(),
-               GetValidCategoryDescription(),
-               GetRandomBoolean()
-               );
+      => new(
+          GetValidCategoryName(),
+          GetValidCategoryDescription(),
+          GetRandomBoolean()
+          );
 
         public List<Category> GetSampleCategoriesList(int length = 5)
-        => Enumerable.Range(1, length )
+        => Enumerable.Range(1, length)
                      .Select(_ => GetSampleCategory())
                      .ToList();
 
