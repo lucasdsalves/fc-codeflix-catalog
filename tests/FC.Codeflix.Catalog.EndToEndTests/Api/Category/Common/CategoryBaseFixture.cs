@@ -1,4 +1,5 @@
 ﻿using FC.Codeflix.Catalog.EndToEndTests.Base;
+using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.Common
 {
@@ -37,5 +38,19 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.Common
         {
             return new Random().NextDouble() < 0.5;
         }
+
+        public DomainEntity.Category GetSampleCategory()
+            => new(GetValidCategoryName(),
+                   GetValidCategoryDescription(),
+                   GetRandomBoolean());
+
+         public List<DomainEntity.Category> GetSampleCategoryList(int length = 5)
+            => Enumerable.Range(1, length)
+                         .Select(_ => new DomainEntity.Category(
+                                                       GetValidCategoryName(),
+                                                       GetValidCategoryDescription(),
+                                                       GetRandomBoolean()
+                                                       )
+                         ).ToList();
     }
 }

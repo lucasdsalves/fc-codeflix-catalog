@@ -12,5 +12,8 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory
             => new(GetValidCategoryName(),
                    GetValidCategoryDescription(),
                    GetRandomBoolean());
+
+        public CreateCategoryInput GetInvalidInput()
+            => new("", "", GetRandomBoolean());
     }
 }

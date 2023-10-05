@@ -17,5 +17,11 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.Common
             return _context.Categories.AsNoTracking()
                                       .FirstOrDefault(c => c.Id == id);
         }
+
+        public async Task InsertList(List<DomainEntity.Category> categories)
+        {
+            await _context.Categories.AddRangeAsync(categories);
+            await _context.SaveChangesAsync();
+        }
     }
 }
