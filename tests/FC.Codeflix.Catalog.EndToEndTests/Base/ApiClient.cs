@@ -58,5 +58,27 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Base
 
             return (response, output);
         }
+
+        public async Task<(HttpResponseMessage?, TOutput?)> Delete<TOutput>(string route)
+            where TOutput : class
+        {
+            var response = await _httpClient.DeleteAsync(route);
+
+            var outputString = await response.Content.ReadAsStringAsync();
+
+            TOutput? output = null;
+
+            if (!string.IsNullOrWhiteSpace(outputString))
+            {
+                output = JsonSerializer.Deserialize<TOutput>
+                                        (outputString,
+                                        new JsonSerializerOptions
+                                        {
+                                            PropertyNameCaseInsensitive = true
+                                        });
+            }
+
+            return (response, output);
+        }
     }
 }
