@@ -1,7 +1,4 @@
 ﻿using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
-using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory
 {
@@ -32,7 +29,7 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory
 
             output.Should().NotBeNull();
             output!.Name.Should().Be(input.Name);
-            output.Description.Should().Be(input.Description);    
+            output.Description.Should().Be(input.Description);
             output.IsActive.Should().Be(input.IsActive);
             output.Id.Should().NotBeEmpty();
 
